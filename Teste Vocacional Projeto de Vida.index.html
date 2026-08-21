@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Vocacional - Projeto de Vida</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-color: #1e293b;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary-color: #3b82f6;
+            --primary-hover: #2563eb;
+            
+            --color-exatas: #10b981;
+            --color-humanas: #f59e0b;
+            --color-biologicas: #06b6d4;
+            --color-artes: #ec4899;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+            background-color: var(--card-color);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: var(--text-color);
+            margin-bottom: 8px;
+        }
+
+        p.subtitle {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        .progress-container {
+            margin-bottom: 25px;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: #334155;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-box h2 {
+            font-size: 1.25rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background-color: #334155;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            padding: 15px;
+            color: var(--text-color);
+            text-align: left;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            line-height: 1.4;
+        }
+
+        .option-btn:hover {
+            background-color: #475569;
+        }
+
+        .option-btn.selected {
+            background-color: #1e293b;
+            border-color: var(--primary-color);
+        }
+
+        .feedback-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #334155;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            display: none;
+        }
+
+        .nav-container {
+            margin-top: 25px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .next-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: none;
+        }
+
+        .next-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* Tela de Resultados */
+        .results-box {
+            display: none;
+        }
+
+        .results-box h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .chart-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .chart-row {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .chart-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .chart-bar-bg {
+            width: 100%;
+            height: 16px;
+            background-color: #334155;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .chart-bar-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 1s ease-out;
+        }
+
+        .recommendation-box {
+            background-color: #334155;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .recommendation-box h3 {
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            color: var(--text-color);
+        }
+
+        .recommendation-box ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .recommendation-box li {
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .recommendation-box li::before {
+            content: "•";
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .restart-btn {
+            width: 100%;
+            background-color: #475569;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .restart-btn:hover {
+            background-color: #64748b;
+        }
+
+        footer {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Tela de Quiz -->
+        <div id="quiz-screen">
+            <header>
+                <h1>Descubra Seu Caminho</h1>
+                <p class="subtitle">Teste Vocacional - Projeto de Vida</p>
+            </header>
+
+            <div class="progress-container">
+                <div class="progress-text">
+                    <span id="progress-count">Pergunta 1 de 10</span>
+                    <span id="progress-percentage">0% concluído</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+            </div>
+
+            <div class="question-box">
+                <h2 id="question-text">Carregando pergunta...</h2>
+                <div class="options-list" id="options-container">
+                    <!-- Opções geradas dinamicamente -->
+                </div>
+            </div>
+
+            <div class="feedback-box" id="feedback-box">
+                <!-- Feedback gerado dinamicamente -->
+            </div>
+
+            <div class="nav-container">
+                <button class="next-btn" id="next-btn" onclick="nextQuestion()">Avançar</button>
+            </div>
+        </div>
+
+        <!-- Tela de Resultados -->
+        <div id="results-screen" class="results-box">
+            <h2>Seu Perfil Vocacional</h2>
+            
+            <div class="chart-container">
+                <!-- Barra de Exatas -->
+                <div class="chart-row">
+                    <div class="chart-label">
+                        <span>Ciências Exatas e Tecnologia</span>
+                        <span id="pct-exatas">0%</span>
+                    </div>
+                    <div class="chart-bar-bg">
+                        <div class="chart-bar-fill" id="bar-exatas" style="background-color: var(--color-exatas);"></div>
+                    </div>
+                </div>
+
+                <!-- Barra de Humanas -->
+                <div class="chart-row">
+                    <div class="chart-label">
+                        <span>Ciências Humanas e Sociais</span>
+                        <span id="pct-humanas">0%</span>
+                    </div>
+                    <div class="chart-bar-bg">
+                        <div class="chart-bar-fill" id="bar-humanas" style="background-color: var(--color-humanas);"></div>
+                    </div>
+                </div>
+
+                <!-- Barra de Biológicas -->
+                <div class="chart-row">
+                    <div class="chart-label">
+                        <span>Ciências Biológicas e Saúde</span>
+                        <span id="pct-biologicas">0%</span>
+                    </div>
+                    <div class="chart-bar-bg">
+                        <div class="chart-bar-fill" id="bar-biologicas" style="background-color: var(--color-biologicas);"></div>
+                    </div>
+                </div>
+
+                <!-- Barra de Artes -->
+                <div class="chart-row">
+                    <div class="chart-label">
+                        <span>Artes, Design e Comunicação</span>
+                        <span id="pct-artes">0%</span>
+                    </div>
+                    <div class="chart-bar-bg">
+                        <div class="chart-bar-fill" id="bar-artes" style="background-color: var(--color-artes);"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recommendation-box" id="recommendation-box">
+                <h3 id="recommendation-title">Seu principal interesse é...</h3>
+                <ul id="recommendation-list">
+                    <!-- Profissões recomendadas -->
+                </ul>
+            </div>
+
+            <button class="restart-btn" onclick="restartQuiz()">Refazer Teste</button>
+        </div>
+    </div>
+
+    <footer>
+        Desenvolvido para as aulas de Projeto de Vida
+    </footer>
+
+    <script>
+        const questions = [
+            {
+                q: "Em um trabalho em grupo na escola, qual papel você prefere assumir?",
+                options: [
+                    { text: "Organizar as tarefas, fazer cálculos, cronogramas ou estruturar a parte lógica.", area: "Exatas", feedback: "Você tem afinidade com organização estrutural, lógica e processos analíticos." },
+                    { text: "Mediar as discussões, entender as necessidades do grupo ou apresentar o trabalho.", area: "Humanas", feedback: "Você demonstra forte inteligência interpessoal, comunicação e liderança social." },
+                    { text: "Pesquisar a fundo sobre o funcionamento prático, dados científicos ou saúde do tema.", area: "Biológicas", feedback: "Você se interessa pela investigação científica, funcionamento da vida ou bem-estar prático." },
+                    { text: "Criar o design dos slides, fazer desenhos, logotipos ou propor ideias fora da caixa.", area: "Artes", feedback: "Sua força está na expressão criativa, estética visual e soluções inovadoras." }
+                ]
+            },
+            {
+                q: "Qual dessas atividades de lazer mais te atrai no dia a dia?",
+                options: [
+                    { text: "Jogar videogame, programar, montar estratégias ou resolver quebra-cabeças complexos.", area: "Exatas", feedback: "Atividades que desafiam o raciocínio lógico e a resolução de problemas te motivam." },
+                    { text: "Ler livros sobre comportamento, debater atualidades, conversar ou ajudar um amigo com conselhos.", area: "Humanas", feedback: "Você valoriza a empatia, a compreensão do outro e o estudo das relações humanas." },
+                    { text: "Praticar esportes, cuidar de plantas ou animais, ou cozinhar receitas saudáveis.", area: "Biológicas", feedback: "Você prefere o contato com a natureza, o corpo humano, a saúde ou o meio ambiente." },
+                    { text: "Desenhar, tocar um instrumento musical, escrever histórias, fotografar ou editar vídeos.", area: "Artes", feedback: "Você se recarrega criando e expressando sua visão de mundo por canais artísticos." }
+                ]
+            },
+            {
+                q: "Se você pudesse resolver um grande problema do mundo hoje, qual escolheria?",
+                options: [
+                    { text: "Desenvolver novas tecnologias, inteligências artificiais ou fontes de energia limpa.", area: "Exatas", feedback: "Você quer impactar o mundo por meio da inovação tecnológica e engenharia." },
+                    { text: "Combater as desigualdades sociais, defender direitos humanos ou melhorar as leis e a educação.", area: "Humanas", feedback: "Sua motivação está em construir uma sociedade mais justa, ética e educada." },
+                    { text: "Encontrar a cura para doenças graves ou criar soluções para a preservação do meio ambiente.", area: "Biológicas", feedback: "Seu foco de impacto é a preservação da saúde, da vida e da sustentabilidade do planeta." },
+                    { text: "Criar campanhas de conscientização impactantes, produções culturais ou projetos artísticos inspiradores.", area: "Artes", feedback: "Você acredita no poder da cultura, da arte e da comunicação para transformar mentalidades." }
+                ]
+            },
+            {
+                q: "Qual matéria escolar você costuma achar mais interessante ou fácil de compreender?",
+                options: [
+                    { text: "Matemática, Física ou Química.", area: "Exatas", feedback: "Você se dá bem com ciências exatas, fórmulas e padrões previsíveis." },
+                    { text: "História, Geografia, Filosofia ou Sociologia.", area: "Humanas", feedback: "Você se interessa pelo contexto histórico, social e cultural da humanidade." },
+                    { text: "Biologia ou Ciências Naturais.", area: "Biológicas", feedback: "O estudo dos organismos vivos, ecossistemas e saúde humana te fascina." },
+                    { text: "Artes, Literatura ou Redação.", area: "Artes", feedback: "Sua mente se destaca na criação de narrativas, linguagens e manifestações estéticas." }
+                ]
+            },
+            {
+                q: "Como você costuma tomar decisões importantes na sua vida?",
+                options: [
+                    { text: "Analisando dados friamente, pesando prós e contras de forma lógica e racional.", area: "Exatas", feedback: "Você confia na racionalidade, na lógica e nas evidências concretas." },
+                    { text: "Pensando no impacto emocional e social que minha decisão terá nas pessoas ao meu redor.", area: "Humanas", feedback: "Suas decisões são guiadas pela empatia e pela harmonia nas relações humanas." },
+                    { text: "Seguindo minha intuição prática e observando o que parece mais saudável e natural a longo prazo.", area: "Biológicas", feedback: "Você busca o equilíbrio, a sustentabilidade e o bem-estar orgânico e prático." },
+                    { text: "Buscando uma alternativa original, criativa e diferente do que todo mundo costuma fazer.", area: "Artes", feedback: "Você prefere caminhos autênticos, inovadores e que fujam do óbvio." }
+                ]
+            },
+            {
+                q: "Qual ambiente de trabalho ideal você imagina para o seu futuro?",
+                options: [
+                    { text: "Um escritório moderno, laboratório de tecnologia ou home office focado em desenvolvimento técnico.", area: "Exatas", feedback: "Você se sente confortável em ambientes estruturados e focados em tecnologia e dados." },
+                    { text: "Um local dinâmico lidando diretamente com o público, escolas, tribunais ou consultórios de atendimento.", area: "Humanas", feedback: "Seu ambiente ideal envolve interação humana constante, diálogo e suporte social." },
+                    { text: "Hospitais, clínicas, laboratórios de pesquisa, reservas naturais ou contato direto com a natureza.", area: "Biológicas", feedback: "Você prefere atuar em locais voltados para o cuidado da saúde ou contato com o meio ambiente." },
+                    { text: "Estúdios de criação, agências de publicidade, teatros ou ambientes de trabalho altamente visuais e flexíveis.", area: "Artes", feedback: "Você precisa de liberdade, dinamismo e estímulo visual constante para produzir." }
+                ]
+            },
+            {
+                q: "Qual destas habilidades você sente que mais se destaca em você?",
+                options: [
+                    { text: "Raciocínio rápido, facilidade com números, lógica ou organização de sistemas.", area: "Exatas", feedback: "Sua mente trabalha de forma analítica e estruturada." },
+                    { text: "Empatia, escuta ativa, facilidade para falar em público ou aconselhar pessoas.", area: "Humanas", feedback: "Você tem facilidade em se conectar, acolher e guiar pessoas." },
+                    { text: "Observação detalhada, cuidado com a vida, paciência ou curiosidade científica.", area: "Biológicas", feedback: "Você possui um perfil atento, cuidadoso e focado em processos naturais." },
+                    { text: "Imaginação fértil, senso estético apurado, originalidade ou habilidades manuais/artísticas.", area: "Artes", feedback: "Sua percepção estética e capacidade de idealizar o novo são seus grandes diferenciais." }
+                ]
+            },
+            {
+                q: "Que tipo de leitura, vídeo ou conteúdo você consome com mais frequência por curiosidade?",
+                options: [
+                    { text: "Notícias de tecnologia, ficção científica, finanças ou tutoriais de lógica e programação.", area: "Exatas", feedback: "Seu interesse espontâneo está ligado à evolução tecnológica e soluções lógicas." },
+                    { text: "Biografias, psicologia, política, atualidades ou romances profundos sobre a vida.", area: "Humanas", feedback: "Você busca compreender a mente humana, a sociedade e as narrativas reais." },
+                    { text: "Curiosidades sobre o corpo humano, saúde, vida animal ou documentários sobre a natureza.", area: "Biológicas", feedback: "Seu foco espontâneo está na vida, na saúde e no funcionamento do planeta." },
+                    { text: "Poesia, quadrinhos, críticas de cinema, design, moda ou ficção fantástica.", area: "Artes", feedback: "Você consome cultura, estética e narrativas visuais e criativas." }
+                ]
+            },
+            {
+                q: "Em uma feira de profissões, qual estande você visitaria primeiro?",
+                options: [
+                    { text: "Robótica, Engenharia de Software, Ciência de Dados e Finanças.", area: "Exatas", feedback: "Você se atrai pelas carreiras do futuro focadas em tecnologia e exatas." },
+                    { text: "Psicologia, Direito, Pedagogia, Jornalismo e Relações Internacionais.", area: "Humanas", feedback: "Você se inclina para carreiras focadas em pessoas, comunicação e sociedade." },
+                    { text: "Medicina, Medicina Veterinária, Biologia Marinha, Nutrição e Fisioterapia.", area: "Biológicas", feedback: "Sua curiosidade profissional está voltada para a saúde e ciências biológicas." },
+                    { text: "Cinema, Design Gráfico, Arquitetura, Publicidade e Artes Visuais.", area: "Artes", feedback: "Você se interessa por carreiras que unem técnica, estética e criatividade." }
+                ]
+            },
+            {
+                q: "Como você prefere lidar com desafios complexos?",
+                options: [
+                    { text: "Dividindo o problema em partes menores e resolvendo de forma sistemática e matemática.", area: "Exatas", feedback: "Você resolve desafios usando metodologia, estrutura e foco analítico." },
+                    { text: "Conversando com outras pessoas para entender diferentes pontos de vista e chegar a um consenso.", area: "Humanas", feedback: "Você resolve desafios priorizando a inteligência coletiva e o diálogo." },
+                    { text: "Analisando as causas naturais e biológicas ou o impacto prático na saúde/ambiente.", area: "Biológicas", feedback: "Você busca soluções focadas na preservação, equilíbrio e bem-estar geral." },
+                    { text: "Experimentando soluções inovadoras, mesmo que pareçam arriscadas ou fora do padrão.", area: "Artes", feedback: "Você resolve desafios usando o pensamento lateral e a experimentação criativa." }
+                ]
+            }
+        ];
+
+        const professions = {
+            Exatas: [
+                "Engenharia (Civil, Mecânica, Elétrica, de Produção)",
+                "Ciência da Computação / Engenharia de Software",
+                "Análise e Desenvolvimento de Sistemas",
+                "Ciência de Dados / Inteligência Artificial",
+                "Matemática / Estatística / Física",
+                "Astronomia / Astrofísica",
+                "Economia / Ciências Contábeis"
+            ],
+            Humanas: [
+                "Psicologia",
+                "Direito",
+                "Pedagogia / Licenciaturas",
+                "Jornalismo / Relações Públicas",
+                "Relações Internacionais / Ciência Política",
+                "História / Ciências Sociais",
+                "Administração / Gestão de Pessoas",
+                "Serviço Social"
+            ],
+            Biológicas: [
+                "Medicina / Enfermagem",
+                "Medicina Veterinária / Zootecnia",
+                "Biologia / Biologia Marinha",
+                "Biomedicina / Farmácia",
+                "Nutrição / Educação Física",
+                "Fisioterapia / Terapia Ocupacional",
+                "Engenharia Ambiental / Agronomia",
+                "Odontologia"
+            ],
+            Artes: [
+                "Design Gráfico / Design de Produto",
+                "Arquitetura e Urbanismo",
+                "Cinema e Audiovisual / Animação",
+                "Publicidade e Propaganda / Marketing",
+                "Artes Visuais / Artes Plásticas",
+                "Moda / Design de Interiores",
+                "Música / Produção Musical",
+                "Escrita Criativa / Produção Editorial"
+            ]
+        };
+
+        let currentQuestionIndex = 0;
+        let scores = { Exatas: 0, Humanas: 0, Biológicas: 0, Artes: 0 };
+        let selectedOptionIndex = null;
+
+        function loadQuestion() {
+            selectedOptionIndex = null;
+            document.getElementById("next-btn").style.display = "none";
+            document.getElementById("feedback-box").style.display = "none";
+
+            const currentQuestion = questions[currentQuestionIndex];
+            
+            // Atualizar progresso
+            const totalQuestions = questions.length;
+            document.getElementById("progress-count").innerText = `Pergunta ${currentQuestionIndex + 1} de ${totalQuestions}`;
+            const pct = Math.round((currentQuestionIndex / totalQuestions) * 100);
+            document.getElementById("progress-percentage").innerText = `${pct}% concluído`;
+            document.getElementById("progress-fill").style.width = `${pct}%`;
+
+            // Exibir pergunta
+            document.getElementById("question-text").innerText = currentQuestion.q;
+
+            // Exibir opções
+            const optionsContainer = document.getElementById("options-container");
+            optionsContainer.innerHTML = "";
+
+            currentQuestion.options.forEach((option, index) => {
+                const button = document.createElement("button");
+                button.className = "option-btn";
+                button.innerText = option.text;
+                button.onclick = () => selectOption(index);
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function selectOption(index) {
+            if (selectedOptionIndex !== null) return; // Evita mudar a resposta após selecionar
+
+            selectedOptionIndex = index;
+            const currentQuestion = questions[currentQuestionIndex];
+            const selectedOption = currentQuestion.options[index];
+
+            // Incrementar pontuação da área correspondente
+            scores[selectedOption.area]++;
+
+            // Destacar botão selecionado
+            const buttons = document.querySelectorAll(".option-btn");
+            buttons.forEach((btn, idx) => {
+                if (index === idx) {
+                    btn.classList.add("selected");
+                }
+                btn.disabled = true; // Desabilita os outros botões
+            });
+
+            // Exibir feedback
+            const feedbackBox = document.getElementById("feedback-box");
+            feedbackBox.innerText = selectedOption.feedback;
+            feedbackBox.style.display = "block";
+
+            // Mostrar botão Avançar
+            document.getElementById("next-btn").style.display = "block";
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById("quiz-screen").style.display = "none";
+            document.getElementById("results-screen").style.display = "block";
+
+            const totalAnswers = questions.length;
+            
+            // Calcular porcentagens
+            const pctExatas = Math.round((scores.Exatas / totalAnswers) * 100);
+            const pctHumanas = Math.round((scores.Humanas / totalAnswers) * 100);
+            const pctBiológicas = Math.round((scores.Biológicas / totalAnswers) * 100);
+            const pctArtes = Math.round((scores.Artes / totalAnswers) * 100);
+
+            // Atualizar textos de porcentagem
+            document.getElementById("pct-exatas").innerText = `${pctExatas}%`;
+            document.getElementById("pct-humanas").innerText = `${pctHumanas}%`;
+            document.getElementById("pct-biologicas").innerText = `${pctBiológicas}%`;
+            document.getElementById("pct-artes").innerText = `${pctArtes}%`;
+
+            // Atualizar largura das barras
+            setTimeout(() => {
+                document.getElementById("bar-exatas").style.width = `${pctExatas}%`;
+                document.getElementById("bar-humanas").style.width = `${pctHumanas}%`;
+                document.getElementById("bar-biologicas").style.width = `${pctBiológicas}%`;
+                document.getElementById("bar-artes").style.width = `${pctArtes}%`;
+            }, 100);
+
+            // Determinar área com maior pontuação
+            let maxArea = "Exatas";
+            let maxScore = scores.Exatas;
+
+            for (const area in scores) {
+                if (scores[area] > maxScore) {
+                    maxScore = scores[area];
+                    maxArea = area;
+                }
+            }
+
+            // Exibir recomendações
+            const titleElement = document.getElementById("recommendation-title");
+            const listElement = document.getElementById("recommendation-list");
+            listElement.innerHTML = "";
+
+            let areaNome = "";
+            if (maxArea === "Exatas") areaNome = "Ciências Exatas e Tecnologia";
+            if (maxArea === "Humanas") areaNome = "Ciências Humanas e Sociais";
+            if (maxArea === "Biológicas") areaNome = "Ciências Biológicas e Saúde";
+            if (maxArea === "Artes") areaNome = "Artes, Design e Comunicação";
+
+            titleElement.innerText = `Seu perfil principal é: ${areaNome}`;
+
+            professions[maxArea].forEach(prof => {
+                const li = document.createElement("li");
+                li.innerText = prof;
+                listElement.appendChild(li);
+            });
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            scores = { Exatas: 0, Humanas: 0, Biológicas: 0, Artes: 0 };
+            document.getElementById("quiz-screen").style.display = "block";
+            document.getElementById("results-screen").style.display = "none";
+            loadQuestion();
+        }
+
+        // Inicializar o quiz
+        loadQuestion();
+    </script>
+</body>
+</html>
